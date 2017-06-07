@@ -1,3 +1,7 @@
+DeepRL in Robotic
+=================
+In this project we will add the [Gazebo](http://gazebosim.org/) simulator as an [OpenAI Gym](https://gym.openai.com/) environment for Reinforcement Learning.
+
 
 JdeRobot
 ========
