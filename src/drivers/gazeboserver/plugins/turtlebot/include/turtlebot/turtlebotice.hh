@@ -39,6 +39,7 @@
 #include <turtlebot/interfaces/camerai.h>
 #include <turtlebot/interfaces/laseri.h>
 #include <turtlebot/interfaces/bumperi.h>
+#include <turtlebot/interfaces/gazeboActionsi.h>
 
 #include <turtlebot/turtlebotsensors.hh>
 #include <turtlebot/turtlebotcontrol.hh>
