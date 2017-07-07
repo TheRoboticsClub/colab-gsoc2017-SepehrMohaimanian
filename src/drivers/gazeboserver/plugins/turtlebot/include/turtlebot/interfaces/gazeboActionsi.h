@@ -3,19 +3,19 @@
 
 
 #include <jderobot/gazeboActions.h>
-#include <gazebo/common/common.hh>
+#include <turtlebot/turtlebotcontrol.hh>
 
 namespace turtlebot{
 namespace interfaces{
 
-class GazeboActionsI : public jderobot::GazeboActions {
+class GazeboActionsI : virtual public jderobot::GazeboActions {
 public:
-    GazeboActionsI ( gazebo::physics::ModelPtr _model);
+    GazeboActionsI(turtlebot::TurtlebotControl *_control);
     virtual ~GazeboActionsI ();
+    virtual void resetGazebo(const Ice::Current &c);
 
-    void reset();
-private:
-    gazebo::physics::ModelPtr model;
+protected:
+    turtlebot::TurtlebotControl* const control;
 };
 
 }}//NS

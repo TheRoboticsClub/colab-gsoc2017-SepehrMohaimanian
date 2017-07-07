@@ -4,7 +4,7 @@
 module jderobot{
 	
 	interface GazeboActions{
-    void reset();
+    void resetGazebo();
 	};
 };
 

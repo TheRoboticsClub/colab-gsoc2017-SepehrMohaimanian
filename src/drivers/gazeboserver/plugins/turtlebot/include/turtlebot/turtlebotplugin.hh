@@ -49,7 +49,6 @@ private:
     TurtlebotSensors sensors;
     TurtlebotControl control;
 
-
 /// Gazebo
 protected:
     void Load(gazebo::physics::ModelPtr _model, sdf::ElementPtr _sdf);

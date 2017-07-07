@@ -3,16 +3,14 @@
 using namespace turtlebot::interfaces;
 using namespace jderobot;
 
-GazeboActionsI::GazeboActionsI(gazebo::physics::ModelPtr _model):
-    model(_model)
+GazeboActionsI::GazeboActionsI( turtlebot::TurtlebotControl *_control):
+  control(_control)
 {}
 
 GazeboActionsI::~GazeboActionsI()
 {}
 
-void GazeboActionsI::reset()
+void GazeboActionsI::resetGazebo(Ice::Current const & c)
 {
-    model->ResetPhysicsStates();
-    model->Reset();
-    model->ResetTime();
+    control->resetModel();
 }

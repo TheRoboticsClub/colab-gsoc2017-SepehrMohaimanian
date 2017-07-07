@@ -119,7 +119,9 @@ void TurtlebotIce::bootstrap(){
     name = prop->getProperty("Turtlebot.CameraR.Name");
     adapter->add(cameraiR, ic->stringToIdentity(name));
 
-//    ObjectPtr actionsi = new GazeboActionsI()
+    ObjectPtr actionsi = new GazeboActionsI(control);
+    name = prop->getProperty("Turtlebot.Reset.Name");
+    adapter->add(actionsi, ic->stringToIdentity(name));
 
     adapter->activate();
 
