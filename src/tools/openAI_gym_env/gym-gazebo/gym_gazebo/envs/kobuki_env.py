@@ -24,6 +24,8 @@ class KobukiEnv( gym.Env):
     self.laser_client = comm.getLaserClient(ic, "kobuki.Laser")
     #initializing motors from config file:
     self.motors_client = comm.getMotorsClient(ic, "kobuki.Motors")
+    #initializing gazebo resetter from config file:
+    self.gazebo_resetter =  = comm.getGazeboActionClient(ic, "kobuki.Reset")  
     
     #initializing the environment:
     laser = self.laser_client.getLaserData()
@@ -48,6 +50,13 @@ class KobukiEnv( gym.Env):
     info = {}
     self.getUpdate()
     return self.laser, reward, self.collision, info
+
+  def _reset(self):
+    vel = CMDVel()
+    vel.vx = 0.0
+    vel.az = 0.0
+    self.motors_client.sendVelocities(vel)
+    self.gazebo_resetter.sendReset() 
 
   def actionToVel( action):
     action -= 1
