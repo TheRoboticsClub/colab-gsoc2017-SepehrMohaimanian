@@ -65,6 +65,7 @@ public:
     void Init(TurtlebotSensors* sensors);
     void OnUpdate(const gazebo::common::UpdateInfo & _info);
     void teleport(gazebo::math::Pose pose);
+    void resetModel();
 
 private:
     gazebo::event::ConnectionPtr updateConnection;

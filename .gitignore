@@ -11,6 +11,8 @@ src/interfaces/cpp/
 src/interfaces/java/
 src/interfaces/python/
 build/
+install/
+*.user
 *.egg-info
 
 *.qrc.depends

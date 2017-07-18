@@ -1,0 +1,78 @@
+import sys
+import Ice
+from .ice.gazeboActionIceClient import GazeboActionIceClient
+
+
+
+def __getGazeboActionIceClient(ic, prefix):
+    '''
+    Returns a GazeboAction Ice Client. This function should never be used. Use getGazeboActionClient instead of this
+
+    @param ic: Ice Communicator
+    @param prefix: prefix name of client in config file
+
+    @type ic: Ice Communicator
+    @type prefix: String
+
+    @return GazeboAction Ice Client
+
+    '''
+    print("Publishing GazeboAction with ICE interfaces")
+    client = GazeboActionIceClient(ic, prefix)
+    client.start()
+    return client
+
+def __getPublisherGazeboAction(ic, prefix):
+    '''
+    Returns a GazeboAction ROS Publisher. This function should never be used. Use getGazeboActionClient instead of this
+
+    @param ic: Ice Communicator
+    @param prefix: prefix name of client in config file
+
+    @type ic: Ice Communicator
+    @type prefix: String
+
+    @return GazeboAction ROS Publisher
+
+    '''
+    
+    print(prefix + ": ROS msg are diabled")
+    return None
+
+def __GazeboActiondisabled(ic, prefix):
+    '''
+    Prints a warning that the client is disabled. This function should never be used. Use getGazeboActionClient instead of this
+
+    @param ic: Ice Communicator
+    @param prefix: prefix name of client in config file
+
+    @type ic: Ice Communicator
+    @type prefix: String
+
+    @return None
+
+    '''
+    print(prefix + " Disabled")
+    return None
+
+def getGazeboActionClient (ic, prefix, node=None):
+    '''
+    Returns a GazeboAction Client.
+
+    @param ic: Ice Communicator
+    @param prefix: prefix name of client in config file
+    @param node: ROS node
+
+    @type ic: Ice Communicator
+    @type prefix: String
+    @type node: ROS node
+
+    @return None if GazeboAction is disabled
+
+    '''
+    prop = prop = ic.getProperties()
+    server = prop.getPropertyAsIntWithDefault(prefix+".Server",0)
+
+    cons = [__GazeboActiondisabled, __getGazeboActionIceClient, __getPublisherGazeboAction]
+
+    return cons[server](ic, prefix)

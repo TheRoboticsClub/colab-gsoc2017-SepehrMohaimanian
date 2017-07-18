@@ -32,6 +32,7 @@ set(SOURCES src/turtlebotplugin.cc
         src/interfaces/camerai.cpp
         src/interfaces/bumperi.cpp
         src/interfaces/cameraibase.cpp
+        src/interfaces/gazeboActionsi.cpp
 )
 
 add_library(turtlebotplugin SHARED ${SOURCES})
