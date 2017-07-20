@@ -23,6 +23,7 @@ import threading
 import Ice
 from .threadSensor import ThreadSensor
 from jderobotTypes import LaserData
+import random
 
 
 class Laser:
@@ -79,6 +80,7 @@ class Laser:
             laserD.maxRange = data.maxRange
             laserD.minRange = data.minRange
             laserD.values = values
+            laserD.timeStamp = random.random()
 
 
             self.lock.acquire()
