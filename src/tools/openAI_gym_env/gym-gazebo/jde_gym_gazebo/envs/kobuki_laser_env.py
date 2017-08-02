@@ -15,11 +15,11 @@ import random
 import sys
 import time
 
-class KobukiEnv( gym.Env):
+class KobukiLaserEnv( gym.Env):
   metadata = {'render.modes': ['human']}
 
   def __init__( self):
-    ic = EasyIce.initialize(["KobukiEnv", "kobuki_conf.cfg"])
+    ic = EasyIce.initialize(["KobukiLaserEnv", "kobuki_conf.cfg"])
     ic, node = comm.init(ic)
     #initializing laser scanner from config file:
     self.laser_client = comm.getLaserClient(ic, "kobuki.Laser")
