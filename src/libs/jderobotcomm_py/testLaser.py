@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import easyiceconfig as EasyIce
 import jderobotComm as comm
 import sys
@@ -21,7 +20,7 @@ if __name__ == '__main__':
     for i in range (10):
         #print("client1", end=":")
         laser = client.getLaserData()
-        #print(laser)
+        print(laser)
         time.sleep(1)
 
 

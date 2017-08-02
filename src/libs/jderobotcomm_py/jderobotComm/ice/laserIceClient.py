@@ -23,6 +23,7 @@ import threading
 import Ice
 from .threadSensor import ThreadSensor
 from jderobotTypes import LaserData
+import random
 
 
 class Laser:
@@ -72,13 +73,14 @@ class Laser:
 
             #laserD.values = laser.distanceData
             for i in range (data.numLaser):
-                values.append(data.distanceData[i] / 1000) 
+                values.append(data.distanceData[i] / 1000.0) 
 
             laserD.maxAngle = data.maxAngle
             laserD.minAngle = data.minAngle
             laserD.maxRange = data.maxRange
             laserD.minRange = data.minRange
             laserD.values = values
+            laserD.timeStamp = random.random()
 
 
             self.lock.acquire()
