@@ -19,7 +19,7 @@ class KobukiEnv( gym.Env):
   metadata = {'render.modes': ['human']}
 
   def __init__( self):
-    ic = EasyIce.initialize(["KobukiEnv", "kobuki_conf.cfg"])
+    ic = EasyIce.initialize(["KobukiEnv", "/home/sepehr/Dev/gym/gym/envs/kobuki/kobuki_conf.cfg"])
     ic, node = comm.init(ic)
     #initializing laser scanner from config file:
     self.laser_client = comm.getLaserClient(ic, "kobuki.Laser")
@@ -37,8 +37,8 @@ class KobukiEnv( gym.Env):
     self.laser = np.zeros(self.observation_dims, np.float32)
     self.action_space = spaces.Discrete( 3)
     self.collision = False
-    self.obstale_threshold = 1.0
-    self.frames_skip = 6
+    self.obstale_threshold = 0.5
+    self.timeStamp = 0.0
     print "Inited !"
 
   def _step(self, action):
@@ -50,9 +50,9 @@ class KobukiEnv( gym.Env):
       reward = -99
     else:
       if action == 1:
-        reward = 0.09
+        reward = 0.9
       else:
-        reward = 0.003
+        reward = -0.003
     info = {}
     return self.laser, reward, self.collision, info
 
@@ -69,22 +69,25 @@ class KobukiEnv( gym.Env):
     action -= 1
     vel = CMDVel()
     if action == 0:
-      vel.vx = 0.6
+      vel.vx = 0.9
     else:
       vel.vx = 0.3
     vel.az = action*0.9
     self.motors_client.sendVelocities(vel)
   
   def getUpdate( self):
+    while self.timeStamp == self.laser_client.getLaserData().timeStamp:
+      pass
     laser = self.laser_client.getLaserData()
-    for i in range(self.frames_skip):
-      while( laser.values == self.laser_client.getLaserData().values ):
-        pass
-      laser = self.laser_client.getLaserData()
+#    for i in range(self.frames_skip):
+#      while laser.timeStamp == self.laser_client.getLaserData().timeStamp:
+#        pass
+#      laser = self.laser_client.getLaserData()
     self.collision = False
     if np.min( laser.values) < self.obstale_threshold:
       self.collision = True
     self.laser = laser.values
+    self.timeStamp = laser.timeStamp
 #    for i in range( len(laser.values)):
 #      self.laser[i] = laser.values[i] #float( laser.values[i])/laser.maxRange
 #      if self.laser[i] < self.obstale_threshold:
