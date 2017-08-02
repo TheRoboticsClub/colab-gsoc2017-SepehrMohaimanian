@@ -19,7 +19,7 @@ class KobukiEnv( gym.Env):
   metadata = {'render.modes': ['human']}
 
   def __init__( self):
-    ic = EasyIce.initialize(["KobukiEnv", "/home/sepehr/Dev/gym/gym/envs/kobuki/kobuki_conf.cfg"])
+    ic = EasyIce.initialize(["KobukiEnv", "kobuki_conf.cfg"])
     ic, node = comm.init(ic)
     #initializing laser scanner from config file:
     self.laser_client = comm.getLaserClient(ic, "kobuki.Laser")
