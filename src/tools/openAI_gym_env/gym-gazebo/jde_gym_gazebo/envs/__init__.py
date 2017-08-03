@@ -1,1 +1,2 @@
 from jde_gym_gazebo.envs.kobuki_laser_env import KobukiLaserEnv
+from jde_gym_gazebo.envs.kobuki_laser2D_env import KobukiLaser2DEnv
