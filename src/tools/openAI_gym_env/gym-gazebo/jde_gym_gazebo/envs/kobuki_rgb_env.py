@@ -8,7 +8,6 @@ import easyiceconfig as EasyIce
 import jderobotComm as comm
 from jderobotTypes import LaserData
 from jderobotTypes import CMDVel
-from parallelIce.cameraClient import CameraClient
 
 #The rest
 import numpy as np
@@ -30,7 +29,7 @@ class KobukiRGBEnv( gym.Env):
     #initializing gazebo resetter from config file:
     self.gazebo_resetter =  comm.getGazeboActionClient(ic, "kobuki.Reset")  
     #initializing camera from config file:
-    self.camera_client = CameraClient(ic, "kobuki.Camera", True)  
+    self.camera_client =  comm.getCameraClient(ic, "kobuki.Camera")  
     
     #initializing the environment:
     laser = self.laser_client.getLaserData()
@@ -39,16 +38,16 @@ class KobukiRGBEnv( gym.Env):
     self.observation_dims = [ len(laser.values), len(laser.values)]
     self.observation_space = spaces.Box(low=0, high=255, shape=( self.observation_dims[0], self.observation_dims[1], 1))
     self.screen = np.zeros((self.observation_dims[0],self.observation_dims[1],3), np.uint8)
+    self.image = self.camera_client.getImage()
     self.action_space = spaces.Discrete( 3)
     self.collision = False
     self.obstale_threshold = 0.5
     self.timeStamp = 0.0
     self.frames_skip = 0   
-    self.display= False
+    self.display= True
     self.pixel_thresh = 60
     self.l = 0
     self.r = 0
-    self.image = self.camera_client.getImage()
     print "Inited !"
 
   def _step(self, action):
@@ -71,7 +70,6 @@ class KobukiRGBEnv( gym.Env):
     vel.az = 0.0
     self.motors_client.sendVelocities(vel)
     self.gazebo_resetter.sendReset()
-    time.sleep(0.3)
     self.getUpdate()
     return self.screen, 0,0 
 
@@ -86,27 +84,27 @@ class KobukiRGBEnv( gym.Env):
     self.motors_client.sendVelocities(vel)
   
   def getUpdate( self):
+    image = self.camera_client.getImage()
     #while self.timeStamp == self.camera_client.getImage().timeStamp:
     #  pass
-    image = self.camera_client.getImage()
-    while image is None or np.array_equal(image ,self.image):
-      image = self.camera_client.getImage()
+    while np.array_equal(image.data ,self.image.data):
+      image = self.camera_client.getImage() 
     self.image = image
     #for i in range(self.frames_skip):
     #  while image.timeStamp == self.camera_client.getImage().timeStamp:
     #    pass
     #  image = self.camera_client.getImage()
-    r_raw = sum(self.image[-1,320:,:] > self.pixel_thresh) 
+    r_raw = sum(image.data[-1,320:,:] > self.pixel_thresh) 
     self.r = sum( r_raw == max(r_raw))-1 
-    l_raw = sum(self.image[-1,:320,:] > self.pixel_thresh) 
+    l_raw = sum(image.data[-1,:320,:] > self.pixel_thresh) 
     self.l = sum( l_raw == max(l_raw))-1 
     laser = self.laser_client.getLaserData()
     self.collision = False
     if np.min( laser.values) < self.obstale_threshold:
       self.collision = True
-    #self.timeStamp = image.timeStamp
-    self.screen = cv2.resize(self.image, (self.observation_dims[0],self.observation_dims[1]))
+    self.timeStamp = image.timeStamp
+    self.screen = cv2.resize(image.data, (self.observation_dims[0],self.observation_dims[1]))
     if self.display:
       cv2.imshow("Screen", cv2.cvtColor(self.screen, cv2.COLOR_BGR2RGB))
-      cv2.waitKey(100)
+      cv2.waitKey(1)
     
