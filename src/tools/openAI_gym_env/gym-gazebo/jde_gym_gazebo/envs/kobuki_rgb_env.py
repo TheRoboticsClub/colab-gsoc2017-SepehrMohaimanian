@@ -20,7 +20,7 @@ class KobukiRGBEnv( gym.Env):
   metadata = {'render.modes': ['human']}
 
   def __init__( self):
-    ic = EasyIce.initialize(["KobukiRGBEnv", "/home/sepehr/Dev/colab-gsoc2017-SepehrMohaimanian/src/tools/openAI_gym_env/gym-gazebo/jde_gym_gazebo/envs/kobuki_conf.cfg"])
+    ic = EasyIce.initialize(["KobukiRGBEnv", "/local_home/Dev/GSoC/colab-gsoc2017-SepehrMohaimanian/src/tools/openAI_gym_env/gym-gazebo/jde_gym_gazebo/envs/kobuki_conf.cfg"])
     ic, node = comm.init(ic)
     #initializing laser scanner from config file:
     self.laser_client = comm.getLaserClient(ic, "kobuki.Laser")
@@ -58,9 +58,21 @@ class KobukiRGBEnv( gym.Env):
       reward = -99
     else:
       if action == 1:
-        reward = 0.6+(self.r*0.075 + self.l*0.075) 
+        reward = 0.6+(self.r*0.9 + self.l*0.9) 
       else:
-        reward = -0.003
+        if self.r == -1 and self.l == -1:
+          reward = 0.03
+        elif self.r == -1:
+          if action == 0:
+            reward = 0.9
+          else:
+            reward = -0.03
+        else:
+          if action == 0:
+            reward = -0.03
+          else:
+            reward = 0.9
+
     info = {}
     return self.screen, reward, self.collision, info
 
@@ -77,9 +89,9 @@ class KobukiRGBEnv( gym.Env):
     action -= 1
     vel = CMDVel()
     if action == 0:
-      vel.vx = 0.9
+      vel.vx = 0.6
     else:
-      vel.vx = 0.3
+      vel.vx = 0.1
     vel.az = action*0.9
     self.motors_client.sendVelocities(vel)
   
