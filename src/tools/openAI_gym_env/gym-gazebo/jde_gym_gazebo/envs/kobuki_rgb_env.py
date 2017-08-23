@@ -20,7 +20,7 @@ class KobukiRGBEnv( gym.Env):
   metadata = {'render.modes': ['human']}
 
   def __init__( self):
-    ic = EasyIce.initialize(["KobukiRGBEnv", "/local_home/Dev/GSoC/colab-gsoc2017-SepehrMohaimanian/src/tools/openAI_gym_env/gym-gazebo/jde_gym_gazebo/envs/kobuki_conf.cfg"])
+    ic = EasyIce.initialize(["KobukiRGBEnv", "/home/sepehr/Dev/colab-gsoc2017-SepehrMohaimanian/src/tools/openAI_gym_env/gym-gazebo/jde_gym_gazebo/envs/kobuki_conf.cfg"])
     ic, node = comm.init(ic)
     #initializing laser scanner from config file:
     self.laser_client = comm.getLaserClient(ic, "kobuki.Laser")
@@ -72,6 +72,7 @@ class KobukiRGBEnv( gym.Env):
             reward = -0.03
           else:
             reward = 0.9
+    print("r: ", self.r, " l: ", self.l)
 
     info = {}
     return self.screen, reward, self.collision, info
@@ -89,10 +90,10 @@ class KobukiRGBEnv( gym.Env):
     action -= 1
     vel = CMDVel()
     if action == 0:
-      vel.vx = 0.6
+      vel.vx = 0.3
     else:
       vel.vx = 0.1
-    vel.az = action*0.9
+    vel.az = action*1.2
     self.motors_client.sendVelocities(vel)
   
   def getUpdate( self):
@@ -107,9 +108,15 @@ class KobukiRGBEnv( gym.Env):
     #    pass
     #  image = self.camera_client.getImage()
     r_raw = sum(image.data[-1,320:,:] > self.pixel_thresh) 
-    self.r = sum( r_raw == max(r_raw))-1 
+    if max(r_raw) == 0:
+      self.r = -1
+    else:
+      self.r = 3-sum( r_raw == max(r_raw))
     l_raw = sum(image.data[-1,:320,:] > self.pixel_thresh) 
-    self.l = sum( l_raw == max(l_raw))-1 
+    if max(l_raw) == 0:
+      self.l = -1
+    else:
+      self.l = 3-sum( l_raw == max(l_raw))
     laser = self.laser_client.getLaserData()
     self.collision = False
     if np.min( laser.values) < self.obstale_threshold:
