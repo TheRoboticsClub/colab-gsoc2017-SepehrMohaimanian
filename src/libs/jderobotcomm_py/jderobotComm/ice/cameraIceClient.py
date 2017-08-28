@@ -24,7 +24,7 @@ import threading
 import Ice
 from .threadSensor import ThreadSensor
 from jderobotTypes import Image
-
+import random
 
 class Camera:
     '''
@@ -80,7 +80,7 @@ class Camera:
             img.data = np.frombuffer(imageData.pixelData, dtype=np.uint8)
             img.data.shape = img.height, img.width, 3
 
-            img.timeStamp = imageData.timeStamp.seconds + imageData.timeStamp.useconds * 1e-9
+            img.timeStamp = random.random()#imageData.timeStamp.seconds + imageData.timeStamp.useconds * 1e-9
 
 
             self.lock.acquire()

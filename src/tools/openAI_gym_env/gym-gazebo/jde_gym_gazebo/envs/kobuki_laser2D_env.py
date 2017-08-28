@@ -37,11 +37,11 @@ class KobukiLaser2DEnv( gym.Env):
     self.observation_space = spaces.Box(low=0, high=255, shape=( self.observation_dims[0], self.observation_dims[1], 1))
     self.screen = np.zeros((self.observation_dims[0],self.observation_dims[1]), np.uint8)
     self.action_space = spaces.Discrete( 3)
+    self.viewer = None
     self.collision = False
     self.obstale_threshold = 0.5
     self.timeStamp = 0.0
     self.frames_skip = 0   
-    self.display= True 
     print "Inited !"
 
   def _step(self, action):
@@ -66,6 +66,19 @@ class KobukiLaser2DEnv( gym.Env):
     self.gazebo_resetter.sendReset()
     self.getUpdate()
     return self.screen, 0,0 
+
+  def _render(self, mode='human', close=False):
+    if close:
+      if self.viewer is not None:
+        self.viewer.close()
+        self.viewer = None
+      return
+    img = self.screen
+    if mode == 'human':
+      from gym.envs.classic_control import rendering
+      if self.viewer is None:
+        self.viewer = rendering.SimpleImageViewer()
+      self.viewer.imshow(img)
 
   def actionToVel( self, action):
     action -= 1
@@ -92,7 +105,3 @@ class KobukiLaser2DEnv( gym.Env):
       value = int( (laser.values[i]/10.0)*self.observation_dims[1])
       self.screen[i] = np.concatenate( (np.ones(value)*255, np.zeros(180-value)))
     self.timeStamp = laser.timeStamp
-    if self.display:
-      cv2.imshow("Screen", self.screen)
-      cv2.waitKey(1)
-    

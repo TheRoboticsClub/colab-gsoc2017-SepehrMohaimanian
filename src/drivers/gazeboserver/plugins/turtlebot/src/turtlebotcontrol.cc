@@ -120,7 +120,7 @@ TurtlebotControl::teleport(gazebo::math::Pose pose){
 }
 
 void TurtlebotControl::resetModel(){
-    this->model->GetWorld()->ResetPhysicsStates();
+    //this->model->GetWorld()->ResetPhysicsStates();
     this->model->GetWorld()->Reset();
 //    this->model->GetWorld()->ResetTime();
 }

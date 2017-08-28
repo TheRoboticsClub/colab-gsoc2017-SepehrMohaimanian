@@ -9,3 +9,8 @@ register(
   id='jde-gazebo-kobuki-laser2D-v0',
   entry_point='jde_gym_gazebo.envs:KobukiLaser2DEnv',
 )
+
+register(
+  id='jde-gazebo-kobuki-rgb-v0',
+  entry_point='jde_gym_gazebo.envs:KobukiRGBEnv',
+)
