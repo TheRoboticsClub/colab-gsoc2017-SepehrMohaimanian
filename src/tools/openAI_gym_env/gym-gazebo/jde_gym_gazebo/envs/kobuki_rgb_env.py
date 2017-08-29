@@ -106,11 +106,11 @@ class KobukiRGBEnv( gym.Env):
   def actionToVel( self, action):
     action -= 1
     vel = CMDVel()
-    #if action == 0:
-    #  vel.vx = 0.3
-    #else:
-    #  vel.vx = 0.1
-    #vel.az = action*1.2
+    if action == 0:
+      vel.vx = 0.3
+    else:
+      vel.vx = 0.1
+    vel.az = action*1.2
     self.motors_client.sendVelocities(vel)
   
   def getUpdate( self):
