@@ -16,23 +16,23 @@ import sys
 import time
 import cv2
 
-class KobukiRGBEnv( gym.Env):
+class TemplateJdeEnv( gym.Env):
   metadata = {'render.modes': ['human']}
 
   def __init__( self):
     # Initialize ICE
     ic = EasyIce.initialize(["YourRGBEnv", "PATH/TO/YOUR/ICE/CONFIG/FILE"])
     ic, node = comm.init(ic)
-    #initializing laser scanner from config file:
+    # Initializing laser scanner from config file:
     self.laser_client = comm.getLaserClient(ic, "ROBOT.Laser")
-    #initializing motors from config file:
+    # Initializing motors from config file:
     self.motors_client = comm.getMotorsClient(ic, "ROBOT.Motors")
-    #initializing gazebo resetter from config file:
+    # Initializing gazebo resetter from config file:
     self.gazebo_resetter =  comm.getGazeboActionClient(ic, "ROBOT.Reset")  
-    #initializing camera from config file:
+    # Initializing camera from config file:
     self.camera_client =  comm.getCameraClient(ic, "ROBOT.Camera")  
     
-    #initializing the environment:
+    # Initializing the environment:
     # Create your observation space (84x84 is default DQN agent)
     self.observation_dims = [ 84, 84]
     self.observation_space = spaces.Box(low=0, high=255, shape=( self.observation_dims[0], self.observation_dims[1], 1))
@@ -96,7 +96,7 @@ class KobukiRGBEnv( gym.Env):
         self.viewer = rendering.SimpleImageViewer()
       self.viewer.imshow(img)
 
-  #Converting the action to robot velocities
+  # Converting the action to robot velocities
   def actionToVel( self, action):
     action -= 1
     vel = CMDVel()
@@ -107,10 +107,10 @@ class KobukiRGBEnv( gym.Env):
     vel.az = action*1.2
     self.motors_client.sendVelocities(vel)
   
-  #Read sensory data and convert the to observation 
+  # Read sensory data and convert the to observation 
   def getUpdate( self):
     image = self.camera_client.getImage()
-    #  in Gazebo/JdeRobot sometimes the camera image data does not update and frame freezes, to avoid srcwing up the training:
+    # in Gazebo/JdeRobot sometimes the camera image data does not update and frame freezes, to avoid srcwing up the training:
     while np.array_equal(image.data ,self.image.data):
       image = self.camera_client.getImage() 
     self.image = image

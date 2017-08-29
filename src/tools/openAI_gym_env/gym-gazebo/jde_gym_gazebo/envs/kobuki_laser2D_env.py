@@ -20,7 +20,7 @@ class KobukiLaser2DEnv( gym.Env):
   metadata = {'render.modes': ['human']}
 
   def __init__( self):
-    ic = EasyIce.initialize(["KobukiLaser2DEnv", "/home/sepehr/Dev/colab-gsoc2017-SepehrMohaimanian/src/tools/openAI_gym_env/gym-gazebo/jde_gym_gazebo/envs/kobuki_conf.cfg"])
+    ic = EasyIce.initialize(["KobukiLaser2DEnv", "gym_kobuki_conf.cfg"])
     ic, node = comm.init(ic)
     #initializing laser scanner from config file:
     self.laser_client = comm.getLaserClient(ic, "kobuki.Laser")
@@ -73,7 +73,7 @@ class KobukiLaser2DEnv( gym.Env):
         self.viewer.close()
         self.viewer = None
       return
-    img = self.screen
+    img = np.concatenate((np.expand_dims(self.screen, axis=2), np.expand_dims(self.screen, axis=2),np.expand_dims(self.screen, axis=2)), axis=2)
     if mode == 'human':
       from gym.envs.classic_control import rendering
       if self.viewer is None:

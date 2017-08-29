@@ -20,7 +20,7 @@ class KobukiRGBEnv( gym.Env):
   metadata = {'render.modes': ['human']}
 
   def __init__( self):
-    ic = EasyIce.initialize(["KobukiRGBEnv", "/local_home/Dev/GSoC/colab-gsoc2017-SepehrMohaimanian/src/tools/openAI_gym_env/gym-gazebo/jde_gym_gazebo/envs/kobuki_conf.cfg"])
+    ic = EasyIce.initialize(["KobukiRGBEnv", "gym_kobuki_conf.cfg"])
     ic, node = comm.init(ic)
     #initializing laser scanner from config file:
     self.laser_client = comm.getLaserClient(ic, "kobuki.Laser")
@@ -106,11 +106,11 @@ class KobukiRGBEnv( gym.Env):
   def actionToVel( self, action):
     action -= 1
     vel = CMDVel()
-    if action == 0:
-      vel.vx = 0.3
-    else:
-      vel.vx = 0.1
-    vel.az = action*1.2
+    #if action == 0:
+    #  vel.vx = 0.3
+    #else:
+    #  vel.vx = 0.1
+    #vel.az = action*1.2
     self.motors_client.sendVelocities(vel)
   
   def getUpdate( self):
