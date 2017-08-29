@@ -61,10 +61,11 @@ class KobukiRGBEnv( gym.Env):
       if action == 1:
         reward = 0.6+(self.r*0.9 + self.l*0.9) 
       else:
-        extra = 0
-        if self.r == 2 and self.l == 2:
-          extra = 1
-        reward = -0.03+extra
+        reward = -0.03
+        #extra = 0
+        #if self.r == 2 and self.l == 2:
+        #  extra = 1
+        #reward = -0.03+extra
        # if self.r == -1 and self.l == -1:
        #   reward = 0.03
        # elif self.r == -1:
